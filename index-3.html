@@ -1,0 +1,156 @@
+<html>
+<head>
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="js/d3.legend.js"></script>
+				<script src="municipalities.js"></script>
+				<script src="xkunnat.js"></script>
+				<script src="xmaakunnat.js"></script>
+						<script src="xseutukunnat.js"></script>
+		<script src="alueet.js"></script>	
+
+
+
+
+	<script src="data/lin.sub.js"></script>
+
+
+	<script src="js/tsne.js"></script>
+	<script src="js/tsne_vis1.js"></script>
+	<link rel="stylesheet" href="css/style.css"/>
+
+    </head>
+
+    <body>
+
+
+	<div class="container-fluid"
+
+	    <!-- header -->
+	    <div class="row">
+		<div class="col-md-12">
+
+		</div>
+	    </div>
+
+	    <!-- data -->
+	    <div class="row">
+
+		<div class="col-md-6">
+		    <div class="panel panel-default">
+			<div class="panel-heading">
+ 			    <h3 class="panel-title">Parameters</h3>
+			</div>
+			<div class="panel-body" style="height:360px; overflow: scroll">
+			<div id="control-panel" data-sr="enter left over 8s">
+			    <div class="param">
+				<label for="param-perplexity">Perplexity</label>
+				<input id="param-perplexity" type="range" min="2" max="100" value="30", step="1">
+				<output for="param-perplexity" id="param-perplexity-value">30</output>
+			    </div>
+			    <div class="param">
+				<label for="param-learningrate">Learning Rate</label>
+				<input id="param-learningrate" type="range" min="1" max="300" value="10", step="1">
+				<output for="param-learningrate" id="param-learningrate-value">10</output>
+			    </div>
+			    <div class="param">
+				<label for="param-maxiter">Max Iterations</label>
+				<input id="param-maxiter" type="range" min="100" max="1000" value="500", step="10">
+				<output for="param-maxiter" id="param-maxiter-value">500</output>
+			    </div>
+			    <div class="param">
+				<label for="param-distance">Distance Metric</label>
+				<select id="param-distance" name="param-distance">
+				    <option value="euclideanDist" selected>Euclidean distance</option>
+				    <option value="jaccardDist">Jaccard dissimilarity</option>
+				</select>
+				<output for="param-distance" id="param-distance-value"></output>
+			    </div>
+			    <div class="param">
+				<label for="param-transform">Data Transform</label>
+				<select id="param-transform" name="param-transform">
+				    <option value="noTrans" selected>No Transform</option>
+				    <option value="logTrans">Log10</option>
+				    <option value="asinhTrans">asinh</option>
+				    <option value="binTrans">Binarize</option>
+				</select>
+				<output for="param-transform" id="param-transform-value"></output>
+			    </div>
+
+			    <div class="row">
+			      <div class="col-md-6">
+				<p><div id="run-button"><button class="btn btn-primary btn-block" onclick="init(getData());">Run</button></div></p>
+			      </div>
+			      <div class="col-md-6">
+				<p><div id="save-button"><button class="btn btn-primary btn-block" onclick="downloadSvg();">Export Image</button></div></p>
+			      </div>
+			    <div id="cost"></div>
+
+			</div>
+			</div>
+		    </div>
+		</div>
+	    </div>
+
+	    <!-- display -->
+	    <div class="row">
+		<div class="col-md-12" align="center">
+		    <div class="panel panel-default">
+			<div id="embed"></div>
+		    </div>
+		</div>
+	    </div>
+	</div>
+
+	<footer>
+	    <a href="https://github.com/JEFworks" target="_blank">@JEFworks</a>
+	</footer>
+	
+  </body>
+
+  <script>
+dataInit=parent.dataInit;
+   // fill in data
+
+
+   // form controls
+   $('#param-perplexity').bind('input', function () { $('#param-perplexity-value').text($('#param-perplexity').val()); });
+   $('#param-earlyexag').bind('input', function () { $('#param-earlyexag-value').text($('#param-earlyexag').val()); });
+   $('#param-learningrate').bind('input', function () { $('#param-learningrate-value').text($('#param-learningrate').val()); });
+   $('#param-maxiter').bind('input', function () { $('#param-maxiter-value').text($('#param-maxiter').val()); });
+
+   function downloadSvg() {
+// Download sag courtesy of https://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
+
+svg = document.getElementById('embed').firstElementChild
+var serializer = new XMLSerializer();
+var source = serializer.serializeToString(svg);
+
+//add name spaces.
+if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+}
+if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+}
+
+//add xml declaration
+source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+//convert svg source to URI data scheme.
+var svgUrl = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+
+var downloadLink = document.createElement("a");
+downloadLink.href = svgUrl;
+downloadLink.download = "tsne.svg";
+document.body.appendChild(downloadLink);
+downloadLink.click();
+document.body.removeChild(downloadLink);
+   }
+   
+  </script>
+
+  <!-- load later -->
+  <script src="js/bootstrap.min.js"></script>
+
+</html>
