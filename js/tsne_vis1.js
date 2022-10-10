@@ -225,7 +225,7 @@ function drawEmbedding() {
     // Add circle for each data point
     g.append("svg:circle")
 	.attr("stroke-width", 1)
-	.attr("fill",   function(d) { return d ? color(d["label"]) : "#00F"; })
+	.attr("fill",   function(d) { console.log(d); eturn d ? color(d["label"]) : "#00F"; })
 	.attr("stroke", function(d) { return d ? color(d["label"]) : "#00F"; })
 	.attr("fill-opacity", .65)
 	.attr("stroke-opacity", .9)
@@ -250,7 +250,7 @@ function drawEmbedding() {
 	.style("visibility", "hidden")
 	.attr("text-anchor", "right")
 	.style("font-size", "12px")
-	.text(function(d) {console.log(d);
+	.text(function(d) {
             return d.name;
         });
     
