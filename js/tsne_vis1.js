@@ -250,7 +250,7 @@ function drawEmbedding() {
 	.style("visibility", "hidden")
 	.attr("text-anchor", "right")
 	.style("font-size", "12px")
-	.text(function(d) {
+	.text(function(d) {console.log(d);
             return d.name;
         });
     
